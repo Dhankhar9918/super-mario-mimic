@@ -29,3 +29,32 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: dhankhar9918/flip-kart-app:dheeraj
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Connect to EC2 & Deploy Container
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "Pulling latest Docker image..."
+            docker pull dhankhar9918/docker_image:latest
+
+            echo "Stopping existing container if running..."
+            docker stop my_app || true
+            docker rm my_app || true
+
+            echo "Running new container..."
+            docker run -d \
+              --name my_app \
+              -p 80:80 \
+              dhankhar9918/docker_image:dheeraj
+
+            echo "Deployment completed successfully!"
