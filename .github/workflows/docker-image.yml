@@ -28,4 +28,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: dhankhar9918/docker_image:latest
+          tags: dhankhar9918/flip-kart-app:dheeraj
